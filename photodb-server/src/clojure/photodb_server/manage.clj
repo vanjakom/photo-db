@@ -25,7 +25,7 @@
 (defn tag-get [name]
 	(mongo/find-one-as-map db "tags" {:id name}))
 
-(defn image-tag-set 
+(defn image-tags-set 
 	"Should be used during image update"
 	[image-id tags]
 	(mongo/update db "images" {:id image-id} {$set {:tags tags}}))

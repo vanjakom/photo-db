@@ -11,8 +11,10 @@
 
 		(mongo/drop db "stores")
 		(mongo/drop db "tags")
+		(mongo/drop db "images")
 		(mongo/drop db "backend_queue")
 
+		; not used currently
 		(mongo/insert db "stores" {
 			:_id "default-store" 
 			:id "default-store"

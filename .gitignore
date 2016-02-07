@@ -1,0 +1,7 @@
+photodb view/.DS_Store
+photodb view/build/
+photodb view/photodb view.xcodeproj/xcuserdata
+photodb view/photodb view/.DS_Store
+
+photodb-server/application.log
+photodb-server/event.log

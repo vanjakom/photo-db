@@ -10,6 +10,7 @@
 (require '[photodb-server.manage 	:as manage])
 (require '[photodb-server.store 	:as store])
 
+(require '[clojure-repl.logging.event :as event])
 (require '[clojure-repl.fs.utils 	:as fs-utils])
 (require '[clojure-repl.fs.io 		:as fs-io])
 (require '[clojure-repl.fs.stream	:as fs-stream])
@@ -68,6 +69,24 @@
 	[]
 	(tag-list (tag-list-context)))
 
+; image metadata api
+(declare image-metadata)
+(defn- image-metadata-context [id] {:id id})
+(defn image-metadata-api
+	[id]
+	(image-metadata (image-metadata-context id)))
+
+; update image tags api
+(declare image-update-tags)
+(defn- image-update-tags-context [id tags] 
+	{
+		:id id
+		:tags tags})
+(defn image-update-tags-api
+	[id tags]
+	(image-update-tags (image-update-tags-context id tags)))
+
+
 ; setup db connection
 (defonce ^:private db 
 	(let [connection (monger.core/connect {:host "localhost" :port 27017})]
@@ -115,6 +134,7 @@
 				initial-metadata {
 					:id id
 					:tags tags
+					:path path
 					:created creation-timestamp
 					:updated timestamp }]
 			(assoc context :metadata (conj exif-metadata initial-metadata)))))
@@ -175,6 +195,12 @@
 		:raw-bytes :original-bytes :thumbnail-square-bytes :preview-bytes :original-normalized))
 	context)
 
+(defn- event-context [context]
+	(event/report "pipeline-event" context)
+	context)
+
+; processors
+
 (defn- process-image [context]
 	(->
 		context
@@ -190,7 +216,8 @@
 		create-preview
 		extract-preview-bytes		
 		write-to-stores
-		write-to-db))
+		write-to-db
+		event-context))
 
 (defn- process-path [context]
 	(let [{	path :path
@@ -201,6 +228,12 @@
 (defn- retrive-image-metadata [context]
 	(let [{	id :id} context]
 		(assoc context :metadata (manage/image-get id))))
+
+(defn- update-image-tags [context]
+	(let [{	id :id
+			tags :tags} context]
+		(manage/image-tags-set id tags)
+		context))
 
 (defn- retrieve-image [context]
 	(let [{	metadata :metadata 
@@ -232,18 +265,29 @@
 (defn- get-all-tags [context]
 	(assoc context :tags (manage/tags-list)))
 
-(defn- process-tags [context]
+(defn- extract-tag-name [context]
 	(let [{	tags :tags} context]
-		(assoc context :prepared-tags (map (fn [tag] {:name (:id tag)}) tags))))
+		(assoc context :tags-name (map (fn [tag] {:name (:id tag)}) tags))))
 
 (defn- tag-list [context]
-	(:prepared-tags
-		(->
-			context
-			get-all-tags
-			process-tags)))
+	(->
+		context
+		get-all-tags
+		extract-tag-name))
+
+(defn- image-metadata [context]
+	(->
+		context
+		retrive-image-metadata))
 
 
+(defn- image-update-tags [context]
+	(->
+		context
+		ensure-tags
+		update-image-tags
+		retrive-image-metadata
+		event-context))
 
 
 

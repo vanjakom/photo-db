@@ -8,6 +8,6 @@
   :resource-paths ["src/resource"]
   :main photodb-server.main
   :dependencies [
-  	[com.mungolab/clojure-repl 					"0.1.0-SNAPSHOT"]
-	[com.novemberain/monger 					"3.0.1"]
-	[com.drewnoakes/metadata-extractor 			"2.8.1"]])
+  	 [com.mungolab/clojure-repl 					"0.1.0-SNAPSHOT"]
+	   [com.novemberain/monger 					"3.0.1"]
+	   [com.drewnoakes/metadata-extractor 			"2.8.1"]])

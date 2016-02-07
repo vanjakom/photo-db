@@ -17,12 +17,13 @@
 	^bytes preview
 	^bytes thumbnail-square]
 
-	; initial implementation will write to default store only, 
+	; initial implementation will write to default store only
+	; CORRECTION: initial implementation will write preview and thumbnail
 	; and will write everything
 	; todo use tags to understand to which stores to write
 
 	(let [	store (:default-store (get-stores))
-			functions (:all store)
+			functions (:preview-and-thumbnail store)
 			write-function (second functions)]
 		(write-function image-metadata raw original preview thumbnail-square)))
 
@@ -86,6 +87,19 @@
 								(write-bytes-to-store-photodb store-path image-metadata raw :raw))
 							(if (not (nil? original)) 
 								(write-bytes-to-store-photodb store-path image-metadata original :original))
+							(if (not (nil? preview)) 
+								(write-bytes-to-store-photodb store-path image-metadata preview :preview))
+							(if (not (nil? thumbnail-square)) 
+								(write-bytes-to-store-photodb 
+									store-path 
+									image-metadata 
+									thumbnail-square 
+									:thumbnail-square)))]
+					:preview-and-thumbnail [
+						; read fn / no read function for all
+						nil
+						; write fn
+						(fn [image-metadata raw original preview thumbnail-square]
 							(if (not (nil? preview)) 
 								(write-bytes-to-store-photodb store-path image-metadata preview :preview))
 							(if (not (nil? thumbnail-square)) 

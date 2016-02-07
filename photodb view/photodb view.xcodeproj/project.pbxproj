@@ -1,0 +1,302 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A55E2F8D1C620C7600B5B6C9 /* TagsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */; };
+		A55E2F8F1C62AED200B5B6C9 /* TagsChooseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */; };
+		A55E2F911C66622700B5B6C9 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F901C66622700B5B6C9 /* Model.swift */; };
+		A5D580731C5411F300EB3808 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D580721C5411F300EB3808 /* AppDelegate.swift */; };
+		A5D5807A1C5411F300EB3808 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5D580781C5411F300EB3808 /* Main.storyboard */; };
+		A5D5807C1C5411F300EB3808 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5D5807B1C5411F300EB3808 /* Assets.xcassets */; };
+		A5D580871C54149700EB3808 /* TagViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D580861C54149700EB3808 /* TagViewVC.swift */; };
+		A5D580891C54158500EB3808 /* PhotoDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D580881C54158500EB3808 /* PhotoDBClient.swift */; };
+		A5D5808B1C541EEE00EB3808 /* MungoLabApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D5808A1C541EEE00EB3808 /* MungoLabApiClient.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsListVC.swift; sourceTree = "<group>"; };
+		A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsChooseVC.swift; sourceTree = "<group>"; };
+		A55E2F901C66622700B5B6C9 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		A5D5806F1C5411F300EB3808 /* photodb view.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "photodb view.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5D580721C5411F300EB3808 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A5D580791C5411F300EB3808 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A5D5807B1C5411F300EB3808 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A5D580801C5411F300EB3808 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A5D580861C54149700EB3808 /* TagViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagViewVC.swift; sourceTree = "<group>"; };
+		A5D580881C54158500EB3808 /* PhotoDBClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoDBClient.swift; sourceTree = "<group>"; };
+		A5D5808A1C541EEE00EB3808 /* MungoLabApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MungoLabApiClient.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A5D5806C1C5411F300EB3808 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A5D580661C5411F300EB3808 = {
+			isa = PBXGroup;
+			children = (
+				A5D580711C5411F300EB3808 /* photodb view */,
+				A5D580701C5411F300EB3808 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A5D580701C5411F300EB3808 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A5D5806F1C5411F300EB3808 /* photodb view.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A5D580711C5411F300EB3808 /* photodb view */ = {
+			isa = PBXGroup;
+			children = (
+				A5D580721C5411F300EB3808 /* AppDelegate.swift */,
+				A5D580781C5411F300EB3808 /* Main.storyboard */,
+				A5D5807B1C5411F300EB3808 /* Assets.xcassets */,
+				A5D580801C5411F300EB3808 /* Info.plist */,
+				A5D580881C54158500EB3808 /* PhotoDBClient.swift */,
+				A55E2F901C66622700B5B6C9 /* Model.swift */,
+				A5D5808A1C541EEE00EB3808 /* MungoLabApiClient.swift */,
+				A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */,
+				A5D580861C54149700EB3808 /* TagViewVC.swift */,
+				A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */,
+			);
+			path = "photodb view";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A5D5806E1C5411F300EB3808 /* photodb view */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A5D580831C5411F300EB3808 /* Build configuration list for PBXNativeTarget "photodb view" */;
+			buildPhases = (
+				A5D5806B1C5411F300EB3808 /* Sources */,
+				A5D5806C1C5411F300EB3808 /* Frameworks */,
+				A5D5806D1C5411F300EB3808 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "photodb view";
+			productName = "photodb view";
+			productReference = A5D5806F1C5411F300EB3808 /* photodb view.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A5D580671C5411F300EB3808 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = mungolab.com;
+				TargetAttributes = {
+					A5D5806E1C5411F300EB3808 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = A5D5806A1C5411F300EB3808 /* Build configuration list for PBXProject "photodb view" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A5D580661C5411F300EB3808;
+			productRefGroup = A5D580701C5411F300EB3808 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A5D5806E1C5411F300EB3808 /* photodb view */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A5D5806D1C5411F300EB3808 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5D5807C1C5411F300EB3808 /* Assets.xcassets in Resources */,
+				A5D5807A1C5411F300EB3808 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A5D5806B1C5411F300EB3808 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A55E2F911C66622700B5B6C9 /* Model.swift in Sources */,
+				A55E2F8F1C62AED200B5B6C9 /* TagsChooseVC.swift in Sources */,
+				A5D580891C54158500EB3808 /* PhotoDBClient.swift in Sources */,
+				A5D580871C54149700EB3808 /* TagViewVC.swift in Sources */,
+				A5D5808B1C541EEE00EB3808 /* MungoLabApiClient.swift in Sources */,
+				A5D580731C5411F300EB3808 /* AppDelegate.swift in Sources */,
+				A55E2F8D1C620C7600B5B6C9 /* TagsListVC.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A5D580781C5411F300EB3808 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A5D580791C5411F300EB3808 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A5D580811C5411F300EB3808 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		A5D580821C5411F300EB3808 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A5D580841C5411F300EB3808 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "photodb view/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mungolab.photodb-view";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A5D580851C5411F300EB3808 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "photodb view/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mungolab.photodb-view";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A5D5806A1C5411F300EB3808 /* Build configuration list for PBXProject "photodb view" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5D580811C5411F300EB3808 /* Debug */,
+				A5D580821C5411F300EB3808 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A5D580831C5411F300EB3808 /* Build configuration list for PBXNativeTarget "photodb view" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5D580841C5411F300EB3808 /* Debug */,
+				A5D580851C5411F300EB3808 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A5D580671C5411F300EB3808 /* Project object */;
+}
