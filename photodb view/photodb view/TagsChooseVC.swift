@@ -21,14 +21,17 @@ class TagsChooseVC: UITableViewController {
     var availableTags: [Tag]! = []
     var imageTags: Set<Tag>! = Set<Tag>()
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.photoDbClient.listTags { (availableTagsO: [Tag]?) -> Void in
             if let availableTags = availableTagsO {
                 self.photoDbClient.imageMetadata(self.imageRef) { (imageMetadataO: ImageMetadata?) -> Void in
                     if let imageMetadata = imageMetadataO {
                         let imageTags = Set<Tag>(imageMetadata.tags)
                         
-                        self.availableTags = availableTags
+                        // show only dynamic tags in tag choose menu, to make editing easier
+                        self.availableTags = availableTags.filter({ (tag) -> Bool in
+                            tag.name.hasPrefix("#")
+                        })
                         self.imageTags = imageTags
                         self.tableView.reloadData()
                     } else {
@@ -42,13 +45,13 @@ class TagsChooseVC: UITableViewController {
         
     }
     
-    @IBAction func dismissClicked(sender: AnyObject) {
-        self.dismissViewControllerAnimated(false) { () -> Void in
+    @IBAction func dismissClicked(_ sender: AnyObject) {
+        self.dismiss(animated: false) { () -> Void in
             // empty
         }
     }
     
-    @IBAction func okClicked(sender: AnyObject) {
+    @IBAction func okClicked(_ sender: AnyObject) {
         // todo save image tags back to server
         self.photoDbClient.updateImageTags(self.imageRef, tags: Array(imageTags)) { (imageMetadata: ImageMetadata?) -> Void in
             if (imageMetadata == nil) {
@@ -56,40 +59,40 @@ class TagsChooseVC: UITableViewController {
             }
         }
         
-        self.dismissViewControllerAnimated(false) { () -> Void in
+        self.dismiss(animated: false) { () -> Void in
             // empty
         }
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return availableTags.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // empty
         
-        let tagChooseCell = self.tableView.dequeueReusableCellWithIdentifier("TagChooseCell") as! TagChooseCell
+        let tagChooseCell = self.tableView.dequeueReusableCell(withIdentifier: "TagChooseCell") as! TagChooseCell
         
-        tagChooseCell.nameLabel.text = availableTags[indexPath.row].name
+        tagChooseCell.nameLabel.text = availableTags[(indexPath as NSIndexPath).row].name
         
-        if (imageTags.contains(availableTags[indexPath.row])) {
-            tagChooseCell.statusLabel.backgroundColor = UIColor.redColor()
+        if (imageTags.contains(availableTags[(indexPath as NSIndexPath).row])) {
+            tagChooseCell.statusLabel.backgroundColor = UIColor.red
         } else {
-            tagChooseCell.statusLabel.backgroundColor = UIColor.greenColor()
+            tagChooseCell.statusLabel.backgroundColor = UIColor.green
         }
         
         return tagChooseCell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (self.imageTags.contains(self.availableTags[indexPath.row])) {
-            self.imageTags.remove(self.availableTags[indexPath.row])
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (self.imageTags.contains(self.availableTags[(indexPath as NSIndexPath).row])) {
+            self.imageTags.remove(self.availableTags[(indexPath as NSIndexPath).row])
         } else {
-            self.imageTags.insert(self.availableTags[indexPath.row])
+            self.imageTags.insert(self.availableTags[(indexPath as NSIndexPath).row])
         }
         self.tableView.reloadData()
     }

@@ -23,9 +23,12 @@ curl -H "Content-Type:application/json" -d '{"path":"/Users/vanja/Pictures/20151
 
 curl -H "Content-Type:application/json" -d '{"path":"/Users/vanja/Pictures/20151212 - New pictures", "tags":["20151212 - New pictures"]}' 'http://localhost:8988/api/admin/process-path'
 
+curl -H "Content-Type:application/json" -d '{"path":"/Volumes/STORAGE/pictures/2016/2016.02 - RoadTrip Poland/", "tags":["2016.02 - RoadTrip Poland"]}' 'http://localhost:8988/api/admin/process-path'
+
 
 (in-ns 'photodb-server.core)
 (ensure-tags {:tags ["#art" "#life"]})
+(ensure-tags {:tags ["#album"]})
 
 ## useful
 
@@ -33,6 +36,7 @@ db.backend_queue.find({"status": {$ne: "done"}}).count()
 
 db.images.find({"tags": { $in: ["2014.09 - RoadTrip Greece, Elafonosis Nikon"]}}).count()
 
+db.images.find({"tags": {$in: ["2016.02 - RoadTrip Poland"]}})
 
 
 ## idea

@@ -36,7 +36,7 @@
 		:tags tags
 		:path path
 		:updated (System/currentTimeMillis)})
-(defn process-path-api 
+(defn process-path-api
 	"Entry point from API."
 	[path tags]
 	(executor/async-backend-request process-path (process-path-context path tags)))
@@ -48,7 +48,7 @@
 		:id id
 		:type type})
 (defn render-image-api
-	"Renders image based on id and type, returns stream which represents jpeg image"
+	"Renders image based on id and type, returns byte array which represents jpeg image"
 	[id type]
 	(render-image (render-image-context id type)))
 
@@ -78,7 +78,7 @@
 
 ; update image tags api
 (declare image-update-tags)
-(defn- image-update-tags-context [id tags] 
+(defn- image-update-tags-context [id tags]
 	{
 		:id id
 		:tags tags})
@@ -88,12 +88,12 @@
 
 
 ; setup db connection
-(defonce ^:private db 
+(defonce ^:private db
 	(let [connection (monger.core/connect {:host "localhost" :port 27017})]
 		(monger.core/get-db connection "photodb")))
 
 (def ^:const ^:private thumbnail-square-dimension 150)
-(def ^:const ^:private preview-dimension 1280)
+(def ^:const ^:private preview-dimension 2048)
 
 ; transformers
 
@@ -108,7 +108,7 @@
 			(manage/tag-create-if-not-exists tag))
 		context))
 
-(defn- original-bytes [context] 
+(defn- original-bytes [context]
 	(let [{	path :path} context]
 		(assoc context :original-bytes (fs-io/read-file-to-byte-array path))))
 
@@ -117,8 +117,12 @@
 		(assoc context :original (image-utils/create-image-from-bytes original-bytes))))
 
 (defn- photo-id [context]
-	(let [ 	{original-bytes :original-bytes} context]
-		(assoc context :id (misc-utils/md5sum-byte-array original-bytes))))
+	(let [message-digest (java.security.MessageDigest/getInstance "MD5")
+        {original-bytes :original-bytes} context]
+		(assoc
+      context
+      :id
+      (.toString (new java.math.BigInteger 1 (.digest message-digest original-bytes)) 16))))
 
 (defn- extract-metadata [context]
 	(let [{	original-bytes :original-bytes
@@ -127,7 +131,7 @@
 			tags :tags} context]
 		(let [	exif-metadata (exif-utils/extract-photo-exif original-bytes)
 				timestamp (System/currentTimeMillis)
-				creation-timestamp 
+				creation-timestamp
 					(if-let [exif-date (:date (:exif exif-metadata))]
 						(exif-utils/exif-date-to-timestamp exif-date)
 						timestamp)
@@ -154,8 +158,8 @@
 
 (defn- create-thumbnail-square [context]
 	(let [{	original-normalized :original-normalized} context]
-		(assoc context 
-			:thumbnail-square 
+		(assoc context
+			:thumbnail-square
 			(image-utils/create-thumbnail-square original-normalized thumbnail-square-dimension))))
 
 (defn- extract-thumbnail-square-bytes [context]
@@ -165,8 +169,8 @@
 
 (defn- create-preview [context]
 	(let [{	original-normalized :original-normalized} context]
-		(assoc context 
-			:preview 
+		(assoc context
+			:preview
 			(image-utils/create-thumbnail original-normalized preview-dimension))))
 
 (defn- extract-preview-bytes [context]
@@ -191,7 +195,7 @@
 		context))
 
 (defn- print-context [context]
-	(clojure.pprint/pprint (dissoc context 
+	(clojure.pprint/pprint (dissoc context
 		:raw-bytes :original-bytes :thumbnail-square-bytes :preview-bytes :original-normalized))
 	context)
 
@@ -214,7 +218,7 @@
 		create-thumbnail-square
 		extract-thumbnail-square-bytes
 		create-preview
-		extract-preview-bytes		
+		extract-preview-bytes
 		write-to-stores
 		write-to-db
 		event-context))
@@ -236,12 +240,12 @@
 		context))
 
 (defn- retrieve-image [context]
-	(let [{	metadata :metadata 
+	(let [{	metadata :metadata
 			type :type} context]
 		(assoc context :image (store/get-image metadata type))))
 
 (defn- render-image [context]
-	(:image 
+	(:image
 		(->
 			context
 			retrive-image-metadata
@@ -255,12 +259,27 @@
 	(let [	{images :images} context]
 		(assoc context :ids (map :id images))))
 
+(defn- extract-sub-tags [context]
+  (let [{images :images tags :tags} context]
+    (assoc
+      context
+      :tags
+      (clojure.set/difference
+        (reduce
+          (fn [all-tags image]
+            (into all-tags (:tags image)))
+          #{}
+          images)
+        (set tags)))))
+
 (defn- tag-view [context]
-	(:ids 
-		(->
-			context
-			find-suitable-images
-			extract-image-ids)))
+  (select-keys
+    (->
+      context
+      find-suitable-images
+      extract-image-ids
+      extract-sub-tags)
+    [:ids :tags]))
 
 (defn- get-all-tags [context]
 	(assoc context :tags (manage/tags-list)))

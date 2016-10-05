@@ -11,17 +11,17 @@ import Foundation
 
 protocol PhotoDBClient {
     // returns all possible tags
-    func listTags(callback: ([Tag]? -> Void)) -> Void
+    func listTags(_ callback: @escaping (([Tag]?) -> Void)) -> Void
     
     // for given list of tags returns images
-    func tagView(tags: [Tag], callback: ([ImageRef]? -> Void)) -> Void
+    func tagView(_ tags: [Tag], callback: @escaping (([ImageRef]?, [Tag]?) -> Void)) -> Void
     
-    func imageMetadata(imageRef: ImageRef, callback: (ImageMetadata? -> Void)) -> Void
+    func imageMetadata(_ imageRef: ImageRef, callback: @escaping ((ImageMetadata?) -> Void)) -> Void
     
-    func updateImageTags(imageRef: ImageRef, tags: [Tag], callback: (ImageMetadata? -> Void)) -> Void
+    func updateImageTags(_ imageRef: ImageRef, tags: [Tag], callback: @escaping ((ImageMetadata?) -> Void)) -> Void
     
-    func thumbnailSquareImage(imageRef: ImageRef, callback: (NSData? -> Void)) -> Void
-    func previewImage(imageRef: ImageRef, callback: (NSData? -> Void)) -> Void
+    func thumbnailSquareImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) -> Void
+    func previewImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) -> Void
 }
 
 class SimplePhotoDBClient: PhotoDBClient {
@@ -31,11 +31,11 @@ class SimplePhotoDBClient: PhotoDBClient {
         self.serverUri = serverUri
     }
     
-    func listTags(callback: ([Tag]? -> Void)) {
+    func listTags(_ callback: @escaping (([Tag]?) -> Void)) -> Void {
         do {
             try MungLabApiClient.asyncApiRequest("http://" + self.serverUri + "/api/tag/list", request: [String:AnyObject]()) { (response) -> Void in
                 guard let _: Dictionary<String, AnyObject> = response else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                     return
@@ -45,67 +45,76 @@ class SimplePhotoDBClient: PhotoDBClient {
                     let tags = tagMaps.map { (tagMap) -> Tag in
                         Tag(fromDict: tagMap)
                     }
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(tags)
                     })
                 } else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                 }
             }
         } catch {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 callback(nil)
             })
         }
     }
     
-    func tagView(tags: [Tag], callback: ([ImageRef]? -> Void)) {
+    func tagView(_ tags: [Tag], callback: @escaping (([ImageRef]?, [Tag]?) -> Void)) -> Void {
         let tagArray: [String] = tags.map { (tag) -> String in
             tag.name
         }
         
         var request: Dictionary<String, AnyObject> = Dictionary()
-        request["tags"] = tagArray
+        request["tags"] = tagArray as AnyObject?
         
         do {
             try MungLabApiClient.asyncApiRequest("http://" + self.serverUri + "/api/tag/view", request: request) { (response) -> Void in
                 guard let _: Dictionary<String, AnyObject> = response else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        callback(nil)
+                    DispatchQueue.main.async(execute: {
+                        callback(nil, nil)
                     })
                     return
                 }
                 
-                if let imageArray = response!["images"] as? [String] {
-                    let imageRefs = imageArray.map { (image) -> ImageRef in
+                var imageRefs: [ImageRef]?
+                if let imageArray = response!["ids"] as? [String] {
+                    imageRefs = imageArray.map { (image) -> ImageRef in
                         ImageRef(id: image)
                     }
-                    dispatch_async(dispatch_get_main_queue(), {
-                        callback(imageRefs)
-                    })
                 } else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        callback(nil)
-                    })
+                    imageRefs = nil
                 }
+                
+                var tags: [Tag]?
+                if let tagsArray = response!["tags"] as? [String] {
+                    tags = tagsArray.map { (tag) -> Tag in
+                        Tag(name: tag)
+                    }
+                } else {
+                    tags = nil
+                }
+                
+                DispatchQueue.main.async(execute: {
+                    callback(imageRefs, tags)
+                })
             }
         } catch {
-            dispatch_async(dispatch_get_main_queue(), {
-                callback(nil)
+            DispatchQueue.main.async(execute: {
+                callback(nil, nil)
             })
         }
     }
     
-    func imageMetadata(imageRef: ImageRef, callback: (ImageMetadata? -> Void)) {
+    func imageMetadata(_ imageRef: ImageRef, callback: @escaping ((ImageMetadata?) -> Void)) -> Void {
         var request: Dictionary<String, AnyObject> = Dictionary()
-        request["id"] = imageRef.id
+        request["id"] = imageRef.id as AnyObject?
         
         do {
             try MungLabApiClient.asyncApiRequest("http://" + self.serverUri + "/api/image/metadata", request: request) { (response) -> Void in
                 guard let _: Dictionary<String, AnyObject> = response else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                     return
@@ -119,31 +128,31 @@ class SimplePhotoDBClient: PhotoDBClient {
                     })
                     let imageMetadata = ImageMetadata(id: imageRef.id, tags: tags)
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    DispatchQueue.main.async(execute: { () -> Void in
                         callback(imageMetadata)
                     })
                 } else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                 }
             }
         } catch {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 callback(nil)
             })
         }
     }
     
-    func updateImageTags(imageRef: ImageRef, tags: [Tag], callback: (ImageMetadata? -> Void)) -> Void {
+    func updateImageTags(_ imageRef: ImageRef, tags: [Tag], callback: @escaping ((ImageMetadata?) -> Void)) -> Void {
         var request: Dictionary<String, AnyObject> = Dictionary()
-        request["id"] = imageRef.id
-        request["tags"] = tags.map { (tag: Tag) -> String in return tag.name }
+        request["id"] = imageRef.id as AnyObject?
+        request["tags"] = tags.map { (tag: Tag) -> String in return tag.name } as AnyObject?
         
         do {
             try MungLabApiClient.asyncApiRequest("http://" + self.serverUri + "/api/image/update-tags", request: request) { (response) -> Void in
                 guard let _: Dictionary<String, AnyObject> = response else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                     return
@@ -159,43 +168,43 @@ class SimplePhotoDBClient: PhotoDBClient {
                     })
                     let imageMetadata = ImageMetadata(id: imageRef.id, tags: tags)
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    DispatchQueue.main.async(execute: { () -> Void in
                         callback(imageMetadata)
                     })
                 } else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         callback(nil)
                     })
                 }
             }
         } catch {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 callback(nil)
             })
         }
     }
     
-    func thumbnailSquareImage(imageRef: ImageRef, callback: (NSData? -> Void)) {
-        // todo
+    func thumbnailSquareImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) {
+        image(imageRef, type: "thumbnail-square", callback: callback)
     }
     
-    func previewImage(imageRef: ImageRef, callback: (NSData? -> Void)) {
+    func previewImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) {
         image(imageRef, type: "preview", callback: callback)
     }
     
-    func image(imageRef: ImageRef, type: String, callback: (NSData? -> Void)) {
+    func image(_ imageRef: ImageRef, type: String, callback: @escaping ((Data?) -> Void)) {
         var request: Dictionary<String, AnyObject> = Dictionary()
-        request["id"] = imageRef.id
-        request["type"] = type
+        request["id"] = imageRef.id as AnyObject?
+        request["type"] = type as AnyObject?
         
         do {
-            try MungLabApiClient.asyncRenderRequest("http://" + self.serverUri + "/render/photo", request: request) { (data: NSData?) -> Void in
-                dispatch_async(dispatch_get_main_queue(), {
+            try MungLabApiClient.asyncRenderRequest("http://" + self.serverUri + "/render/photo", request: request) { (data: Data?) -> Void in
+                DispatchQueue.main.async(execute: {
                     callback(data)
                 })
             }
         } catch {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 callback(nil)
             })
         }

@@ -11,20 +11,23 @@ import UIKit
 class TagViewVC: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var commandStatus: UILabel!
-    
-    // in
-    var tag: String! = nil
-    
+    @IBOutlet weak var tagsLabel: UILabel!
+
     var photoDbClient: PhotoDBClient! = nil
-    var imageRefs: [ImageRef]! = []
-    var currentImage: Int = -1
+    var imageRefs: [ImageRef]! = nil
     
-    override func viewDidAppear(animated: Bool) {
+    //var currentImage: Int = -1
+    var currentImage: Int = 0
+    
+    override func viewDidAppear(_ animated: Bool) {
         // todo load list of images
         // retrieve first image and assing to imageView
         
-        self.photoDbClient = SimplePhotoDBClient(serverUri: "192.168.88.32:8988")
-        
+        //self.photoDbClient = SimplePhotoDBClient(serverUri: "192.168.88.32:8988")
+        //self.photoDbClient = SimplePhotoDBClient(serverUri: "127.0.0.1:8988")
+
+
+        /*
         self.photoDbClient.tagView([Tag(name: tag)], callback: { (imageRefs: [ImageRef]?) -> Void in
             guard let _: [ImageRef] = imageRefs else {
                 print("unable to recieve image ids")
@@ -43,6 +46,9 @@ class TagViewVC: UIViewController {
                 self.displayCommandStatus("no images")
             }
         })
+         */
+
+        displayImage()
     }
     
     /*
@@ -103,10 +109,10 @@ class TagViewVC: UIViewController {
     }
     */
     
-    @IBAction func tapGestureOnImageView(sender: UITapGestureRecognizer) {
-        if (sender.state == .Ended) {
+    @IBAction func tapGestureOnImageView(_ sender: UITapGestureRecognizer) {
+        if (sender.state == .ended) {
             print("tap gesture")
-            let position = sender.locationInView(self.imageView)
+            let position = sender.location(in: self.imageView)
             print(position)
             let centarX = self.imageView.bounds.width / 2
             let maxTopY = self.imageView.bounds.height / 5
@@ -114,25 +120,25 @@ class TagViewVC: UIViewController {
             
             if (position.y < maxTopY) {
                 //displayCommandStatus("top")
-                self.dismissViewControllerAnimated(false, completion: { () -> Void in
+                self.dismiss(animated: false, completion: { () -> Void in
                     // empty
                 })
             } else if (position.y > minBottomY) {
                 displayCommandStatus("bottom")
                 
-                let tagsChooseVC = self.storyboard?.instantiateViewControllerWithIdentifier("TagsChooseVC") as! TagsChooseVC
-                tagsChooseVC.modalPresentationStyle = .FormSheet
+                let tagsChooseVC = self.storyboard?.instantiateViewController(withIdentifier: "TagsChooseVC") as! TagsChooseVC
+                tagsChooseVC.modalPresentationStyle = .formSheet
                 tagsChooseVC.photoDbClient = self.photoDbClient
                 tagsChooseVC.imageRef = self.imageRefs[self.currentImage]
                 
-                self.presentViewController(tagsChooseVC, animated: false, completion: {
+                self.present(tagsChooseVC, animated: false, completion: {
                     // empty
                 })
             } else {
                 if (position.x > centarX) {
                     if (self.imageRefs.count > 0) {
                         if (self.currentImage < self.imageRefs.count - 1) {
-                            self.currentImage++
+                            self.currentImage += 1
                             displayImage()
                             displayCommandStatus("\(self.currentImage + 1) of \(self.imageRefs.count)")
                         } else {
@@ -145,7 +151,7 @@ class TagViewVC: UIViewController {
                     if (self.imageRefs.count > 0) {
                         print("swipe right")
                         if (self.currentImage > 0) {
-                            self.currentImage--
+                            self.currentImage -= 1
                             displayImage()
                             displayCommandStatus("\(self.currentImage + 1) of \(self.imageRefs.count)")
                         } else {
@@ -159,21 +165,21 @@ class TagViewVC: UIViewController {
         }
     }
     
-    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         if let _: UIImage = self.imageView.image {
             let floorAspectImage = floor(self.imageView.image!.size.width / self.imageView.image!.size.height)
             let floorAspectImageView = floor(self.imageView.bounds.width / self.imageView.bounds.height)
             if (floorAspectImage - floorAspectImageView == 0) {
-                self.imageView.contentMode = UIViewContentMode.ScaleAspectFill
+                self.imageView.contentMode = UIViewContentMode.scaleAspectFill
             } else {
-                self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
+                self.imageView.contentMode = UIViewContentMode.scaleAspectFit
             }
         }
     }
     
-    private func displayImage() {
-        self.photoDbClient.previewImage(self.imageRefs[self.currentImage]) { (imageData: NSData?) -> Void in
-            guard let _: NSData = imageData else {
+    fileprivate func displayImage() {
+        self.photoDbClient.previewImage(self.imageRefs[self.currentImage]) { (imageData: Data?) -> Void in
+            guard let _: Data = imageData else {
                 print("unable to retireve image: " + self.imageRefs[self.currentImage].id)
                 return
             }
@@ -182,13 +188,13 @@ class TagViewVC: UIViewController {
             
             let image = UIImage(data: imageData!)
 
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 let floorAspectImage = floor(image!.size.width / image!.size.height)
                 let floorAspectImageView = floor(self.imageView.bounds.width / self.imageView.bounds.height)
                 if (floorAspectImage - floorAspectImageView == 0) {
-                    self.imageView.contentMode = UIViewContentMode.ScaleAspectFill
+                    self.imageView.contentMode = UIViewContentMode.scaleAspectFill
                 } else {
-                    self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
+                    self.imageView.contentMode = UIViewContentMode.scaleAspectFit
                 }
                 
                 self.imageView.image = image
@@ -196,17 +202,30 @@ class TagViewVC: UIViewController {
         }
     }
     
-    private func displayCommandStatus(status: String) {
+    fileprivate func displayCommandStatus(_ status: String) {
         self.commandStatus.text = status
-        self.commandStatus.hidden = false
+        self.commandStatus.isHidden = false
         
-        NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "commandStatusTimer", userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(TagViewVC.commandStatusTimer), userInfo: nil, repeats: false)
+    }
+    
+    func displayTags(tags: [String]) {
+        self.tagsLabel.text = tags.joined(separator: ",")
+        self.tagsLabel.isHidden = false
+        
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(TagViewVC.tagsLabelTimer), userInfo: nil, repeats: false)
     }
     
     func commandStatusTimer() {
-        dispatch_async(dispatch_get_main_queue(), {
-             self.commandStatus.hidden = true
+        DispatchQueue.main.async(execute: {
+             self.commandStatus.isHidden = true
         })
+    }
+    
+    func tagsLabelTimer() {
+        DispatchQueue.main.async {
+            self.tagsLabel.isHidden = true
+        }
     }
 }
 

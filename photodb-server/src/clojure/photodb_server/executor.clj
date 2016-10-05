@@ -4,7 +4,7 @@
 
 (require '[clojure-repl.logging.event :as event])
 
-(defonce db 
+(defonce db
 	(let [connection (monger.core/connect {:host "localhost" :port 27017})]
 		(monger.core/get-db connection "photodb")))
 
@@ -24,9 +24,9 @@
 
 
 			; (let [envelope-done (change-status-backend-request envelope :done)]
-			; 	(monger.collection/update 
-			; 		db 
-			; 		"backend_queue" 
+			; 	(monger.collection/update
+			; 		db
+			; 		"backend_queue"
 			; 		{:_id (get envelope :_id)} (stringify-backend-request envelope-done))
 			; 	(event/report "backend request complete" (stringify-backend-request envelope))))))
 
@@ -47,16 +47,16 @@
 		:context context})
 
 (defn- mongodb-report-request [backend-request]
-	(monger.collection/insert 
-		db 
-		"backend_queue" 
+	(monger.collection/insert
+		db
+		"backend_queue"
 		(stringify-backend-request backend-request)))
 
 (defn- mongodb-change-status [backend-request status]
-	(monger.collection/update 
-		db 
-		"backend_queue" 
-		{:_id (get backend-request :_id)} 
+	(monger.collection/update
+		db
+		"backend_queue"
+		{:_id (get backend-request :_id)}
 		(stringify-backend-request (assoc backend-request :status status))))
 
 ; todo unbuffered ???
@@ -65,25 +65,21 @@
 (defn- generate-backend-request-id []
 	(str (System/currentTimeMillis) "-" (System/nanoTime)))
 
-(thread 
+(thread
 	(do
 		(.setName (Thread/currentThread) "BackendRequestThread")
-		(while true 
+		(while true
 			(do
 				(let [backend-request (<!! backend-channel)]
-					(mongodb-change-status backend-request :running)					
+					(mongodb-change-status backend-request :running)
 					(let [
 							process-fn (get backend-request :process-fn)
 							request (get backend-request :context)]
 						(try
 							(process-fn request)
 							(mongodb-change-status backend-request :done)
-							(catch Throwable t 
+							(catch Throwable t
 								; todo log throwable
 								(.printStackTrace t)
 								(mongodb-change-status backend-request :failed)))))))))
-
-
-
-
 

@@ -6,12 +6,12 @@
 
 (declare get-stores)
 
-(defn ensure-stores 
+(defn ensure-stores
 	"should for given image-metadata and appropriate images
-	store image representations to adequate stores in case store 
+	store image representations to adequate stores in case store
 	is not available image representation ( metadata, images ...)
 	should be stored in temporary store and request written to queue"
-	[^clojure.lang.IPersistentMap image-metadata 
+	[^clojure.lang.IPersistentMap image-metadata
 	^bytes raw
 	^bytes original
 	^bytes preview
@@ -54,7 +54,7 @@
 	(let [	final-path (full-path-for-image-photodb store-path (:id image-metadata) type)]
 		(fs-io/read-file-to-byte-array final-path)))
 
-; (defn- write-image-to-store-photodb 
+; (defn- write-image-to-store-photodb
 ; 	"Write image calls always expect BufferedImage on input"
 ; 	[store-path image-metadata ^java.awt.image.BufferedImage image type]
 ; 	(let [	final-path (full-path-for-image-photodb store-path (:id image-metadata) type)]
@@ -65,7 +65,7 @@
 	(let [	final-path (full-path-for-image-photodb store-path (:id image-metadata) type)]
 		(fs-io/write-file-from-byte-array bytes final-path)))
 
-(defn- get-stores 
+(defn- get-stores
 	"Returns stores setup. Stores are represented as maps where key is store keyword and value is
 	map of all types of data stored in store. Each type contains vector of two elements read and
 	write fn. Read or Write fn should be used to retrieve data from particular store.
@@ -75,7 +75,7 @@
 	; todo should return stores from mongodb and transform them to functions
 
 	{
-		:default-store 
+		:default-store
 			(let [store-path "/Users/vanja/photo-db"]
 				{
 					:all [
@@ -83,55 +83,65 @@
 						nil
 						; write fn
 						(fn [image-metadata raw original preview thumbnail-square]
-							(if (not (nil? raw)) 
+							(if (not (nil? raw))
 								(write-bytes-to-store-photodb store-path image-metadata raw :raw))
-							(if (not (nil? original)) 
+							(if (not (nil? original))
 								(write-bytes-to-store-photodb store-path image-metadata original :original))
-							(if (not (nil? preview)) 
+							(if (not (nil? preview))
 								(write-bytes-to-store-photodb store-path image-metadata preview :preview))
-							(if (not (nil? thumbnail-square)) 
-								(write-bytes-to-store-photodb 
-									store-path 
-									image-metadata 
-									thumbnail-square 
+							(if (not (nil? thumbnail-square))
+								(write-bytes-to-store-photodb
+									store-path
+									image-metadata
+									thumbnail-square
 									:thumbnail-square)))]
 					:preview-and-thumbnail [
 						; read fn / no read function for all
 						nil
 						; write fn
 						(fn [image-metadata raw original preview thumbnail-square]
-							(if (not (nil? preview)) 
+							(if (not (nil? preview))
 								(write-bytes-to-store-photodb store-path image-metadata preview :preview))
-							(if (not (nil? thumbnail-square)) 
-								(write-bytes-to-store-photodb 
-									store-path 
-									image-metadata 
-									thumbnail-square 
+							(if (not (nil? thumbnail-square))
+								(write-bytes-to-store-photodb
+									store-path
+									image-metadata
+									thumbnail-square
 									:thumbnail-square)))]
 					:raw [
 						(fn [image-metadata]
 							(read-bytes-from-store-photodb store-path image-metadata :raw))
 						(fn [image-metadata raw original preview thumbnail-square]
-							(if (not (nil? raw)) 
+							(if (not (nil? raw))
 								(write-bytes-to-store-photodb store-path image-metadata raw :raw)))]
 					:original [
+            ; adding support for retrieve of original image from source location
 						(fn [image-metadata]
-							(read-bytes-from-store-photodb store-path image-metadata :original))
+              (let [	final-path (full-path-for-image-photodb store-path (:id image-metadata) type)]
+                ; tricky, first check if original exists in photo-db store, if not try with source location
+                (if
+                  (.exists (new java.io.File final-path))
+    							(read-bytes-from-store-photodb store-path image-metadata :original)
+                  (if
+                    (.exists (new java.io.File (:path image-metadata)))
+                    (fs-io/read-file-to-byte-array (:path image-metadata))
+                    ; todo fail to default call which will fail ...
+                    (read-bytes-from-store-photodb store-path image-metadata :original)))))
 						(fn [image-metadata raw original preview thumbnail-square]
 							(write-bytes-to-store-photodb store-path image-metadata original :original))]
 					:preview [
 						(fn [image-metadata]
-							(read-bytes-from-store-photodb store-path image-metadata :preview))					
+							(read-bytes-from-store-photodb store-path image-metadata :preview))
 						(fn [image-metadata raw original preview thumbnail-square]
 							(write-bytes-to-store-photodb store-path image-metadata preview :preview))]
 					:thumbnail-square [
 						(fn [image-metadata]
 							(read-bytes-from-store-photodb store-path image-metadata :thumbnail-square))
 						(fn [image-metadata raw original preview thumbnail-square]
-							(write-bytes-to-store-photodb 
-								store-path 
-								image-metadata 
-								thumbnail-square 
+							(write-bytes-to-store-photodb
+								store-path
+								image-metadata
+								thumbnail-square
 								:thumbnail-square))]})})
 
 

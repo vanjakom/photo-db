@@ -15,37 +15,38 @@
 
 (require '[photodb-server.core :as core])
 
-(defn api-admin-process-path 
+(defn api-admin-process-path
 	"To be called to import path with images to photodb"
 	[request]
 	(event/report "api-admin-process-path request" request)
 	(let [	params (get request :params)]
 		(if-let [	path (get params :path)]
 			(if-let [	tags (get params :tags)]
-				(do 
+				(do
 					(core/process-path-api path tags)
 					(http-server/api-response-ok {:status :ok}))
 				(http-server/api-response-fail {:status :missing-params}))
 			(http-server/api-response-fail {:status :missing-params}))))
 
 
-(defn api-tag-explore 
-	"To be used to retrieve sub tags which could narrow down images list. 
+; no need for this anymore, api-tag-view returns both :images and :tags
+(defn api-tag-explore
+	"To be used to retrieve sub tags which could narrow down images list.
 	Also returns number of images that are matched with tags list"
 	[request]
 	(todo "implement this")
 	{:status 200 :body "ok"})
 
-(defn api-tag-view 
-	"To be called to retrieve list of images that are match for given tags. 
-	Images will be represented by list and sorted in order in which should 
+(defn api-tag-view
+	"To be called to retrieve list of images that are match for given tags.
+	Images will be represented by list and sorted in order in which should
 	be presented to user"
 	[request]
 	(event/report "tag-view" request)
 	(let [params (get request :params)]
 		(if-let [tags (get params :tags)]
-			(if-let [images (core/tag-view-api tags)]
-				(http-server/api-response-ok {:images images})
+			(if-let [response (core/tag-view-api tags)]
+				(http-server/api-response-ok response)
 				(http-server/api-response-fail {:status :no-images}))
 			(http-server/api-response-fail {:status :missing-params}))))
 
@@ -94,7 +95,7 @@
 	(todo "implement this")
 	{:body "ok"})
 
-(defn render-photo 
+(defn render-photo
 	"To be called to retrieve image with given id and type"
 	[request]
 	(event/report "render-photo" request)
@@ -121,8 +122,8 @@
 		(compojure.core/GET "/render/tag/explore" _ render-tag-explore)
 		(compojure.core/GET "/render/tag/view" _ render-tag-view)
 		(compojure.core/GET "/render/photo" _ render-photo)
-		(compojure.core/POST "/render/photo" _ 
-			(ring.middleware.json/wrap-json-params 
+		(compojure.core/POST "/render/photo" _
+			(ring.middleware.json/wrap-json-params
 						(ring.middleware.keyword-params/wrap-keyword-params render-photo)))))
 
 

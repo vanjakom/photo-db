@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Tag: Hashable {
+open class Tag: Hashable {
     let name: String
     
     init(fromDict: Dictionary<String, AnyObject>) {
@@ -19,7 +19,7 @@ public class Tag: Hashable {
         self.name = name
     }
     
-    public var hashValue: Int {
+    open var hashValue: Int {
         get {
             return self.name.hashValue
         }

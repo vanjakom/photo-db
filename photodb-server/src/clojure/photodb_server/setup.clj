@@ -16,7 +16,7 @@
 
 		; not used currently
 		(mongo/insert db "stores" {
-			:_id "default-store" 
+			:_id "default-store"
 			:id "default-store"
 			:path "/Users/vanja/photo-db"
 			:patterns {
@@ -32,11 +32,11 @@
 					:type "photo-db"}}})
 
 		(mongo/insert db "tags" {
-			:_id "best 2016"
-			:id "best 2016"
+			:_id "#best-2016"
+			:id "#best-2016"
 			:stores {
 				:default-store (list :all)}})
-		
-		
+
+
 		))
 

@@ -9,51 +9,51 @@
 import Foundation
 
 class MungLabApiClient {
-    class func asyncApiRequest(url: String, request: Dictionary<String, AnyObject>, callback: Dictionary<String, AnyObject>? -> Void) throws -> Void {
+    class func asyncApiRequest(_ url: String, request: Dictionary<String, AnyObject>, callback: @escaping (Dictionary<String, AnyObject>?) -> Void) throws -> Void {
         
-        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: url)!)
+        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: URL(string: url)! as URL)
         
-        urlRequest.HTTPMethod = "POST"
+        urlRequest.httpMethod = "POST"
         urlRequest.timeoutInterval = 10.0
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let data: NSData = try NSJSONSerialization.dataWithJSONObject(request, options: NSJSONWritingOptions())
-        urlRequest.HTTPBody = data
+        let data: Data = try JSONSerialization.data(withJSONObject: request, options: JSONSerialization.WritingOptions())
+        urlRequest.httpBody = data as Data
         
-        NSURLSession.sharedSession().dataTaskWithRequest(urlRequest) {
+        URLSession.shared.dataTask(with: urlRequest as URLRequest) {
             (data, response, error) -> Void in
-            guard let _: NSData = data, let _: NSURLResponse = response where error == nil else {
+            guard let _: NSData = data as NSData?, let _: URLResponse = response , error == nil else {
                 callback(nil)
                 return
             }
             
             do {
-                let responseDict = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions()) as? Dictionary<String, AnyObject>
+                let responseDict = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions()) as? Dictionary<String, AnyObject>
                 callback(responseDict)
             } catch {
                 callback(nil)
             }}.resume()
     }
     
-    class func asyncRenderRequest(url: String, request: Dictionary<String, AnyObject>, callback: NSData? -> Void) throws -> Void {
+    class func asyncRenderRequest(_ url: String, request: Dictionary<String, AnyObject>, callback: @escaping (Data?) -> Void) throws -> Void {
         
-        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: url)!)
+        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: URL(string: url)! as URL)
         
-        urlRequest.HTTPMethod = "POST"
+        urlRequest.httpMethod = "POST"
         urlRequest.timeoutInterval = 10.0
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let data: NSData = try NSJSONSerialization.dataWithJSONObject(request, options: NSJSONWritingOptions())
-        urlRequest.HTTPBody = data
+        let data: Data = try JSONSerialization.data(withJSONObject: request, options: JSONSerialization.WritingOptions())
+        urlRequest.httpBody = data
         
-        NSURLSession.sharedSession().dataTaskWithRequest(urlRequest) {
+        URLSession.shared.dataTask(with: urlRequest as URLRequest, completionHandler: {
             (data, response, error) -> Void in
-            guard let _: NSData = data, let _: NSURLResponse = response where error == nil else {
+            guard let _: Data = data, let _: URLResponse = response , error == nil else {
                 callback(nil)
                 return
             }
             
             callback(data!)
-            }.resume()
+            }) .resume()
     }
 }

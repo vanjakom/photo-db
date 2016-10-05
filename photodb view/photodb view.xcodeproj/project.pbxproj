@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A52A76C61D96E493003D1EBD /* TagThumbnailViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A76C51D96E493003D1EBD /* TagThumbnailViewVC.swift */; };
 		A55E2F8D1C620C7600B5B6C9 /* TagsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */; };
 		A55E2F8F1C62AED200B5B6C9 /* TagsChooseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */; };
 		A55E2F911C66622700B5B6C9 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E2F901C66622700B5B6C9 /* Model.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A52A76C51D96E493003D1EBD /* TagThumbnailViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagThumbnailViewVC.swift; sourceTree = "<group>"; };
 		A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsListVC.swift; sourceTree = "<group>"; };
 		A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsChooseVC.swift; sourceTree = "<group>"; };
 		A55E2F901C66622700B5B6C9 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				A55E2F901C66622700B5B6C9 /* Model.swift */,
 				A5D5808A1C541EEE00EB3808 /* MungoLabApiClient.swift */,
 				A55E2F8C1C620C7600B5B6C9 /* TagsListVC.swift */,
+				A52A76C51D96E493003D1EBD /* TagThumbnailViewVC.swift */,
 				A5D580861C54149700EB3808 /* TagViewVC.swift */,
 				A55E2F8E1C62AED200B5B6C9 /* TagsChooseVC.swift */,
 			);
@@ -108,6 +111,8 @@
 				TargetAttributes = {
 					A5D5806E1C5411F300EB3808 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 3C36UVVM26;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -153,6 +158,7 @@
 				A5D5808B1C541EEE00EB3808 /* MungoLabApiClient.swift in Sources */,
 				A5D580731C5411F300EB3808 /* AppDelegate.swift in Sources */,
 				A55E2F8D1C620C7600B5B6C9 /* TagsListVC.swift in Sources */,
+				A52A76C61D96E493003D1EBD /* TagThumbnailViewVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +196,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 3C36UVVM26;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -235,6 +242,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 3C36UVVM26;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -261,6 +269,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mungolab.photodb-view";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -272,6 +281,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mungolab.photodb-view";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
