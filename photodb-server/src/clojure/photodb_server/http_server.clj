@@ -14,6 +14,7 @@
 (require '[clojure-repl.fs.stream	:as fs-stream])
 
 (require '[photodb-server.core :as core])
+(require '[photodb-server.render :as render])
 
 (defn api-admin-process-path
 	"To be called to import path with images to photodb"
@@ -91,7 +92,24 @@
 	(todo "implement this")
 	{:body "ok"})
 
-(defn render-tag-view [request]
+(defn render-tag-view
+  "Returns html render of images for given tags"
+  [request]
+  (event/report "render-tag-view" request)
+  (let [params (:params request)]
+    (if-let [tags-string (:tags params)]
+      (let [tags (clojure.string/split tags-string #";")]
+        (if-let [image-type (:type params)]
+          (with-open [output-stream (new java.io.ByteArrayOutputStream)]
+            (render/render-images-html tags image-type output-stream)
+            (let [input-stream (fs-stream/byte-input-stream-from-output-stream output-stream)]
+              (http-server/render-response-ok
+                "text/html"
+                input-stream)))
+          (http-server/api-response-fail {:status :missing-params})))
+      (http-server/api-response-fail {:status :missing-params}))))
+
+
 	(todo "implement this")
 	{:body "ok"})
 

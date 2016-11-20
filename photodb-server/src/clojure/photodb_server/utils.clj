@@ -17,6 +17,7 @@
         (.write output-stream image-bytes)
         (.close output-stream)))))
 
+; todo use render/ methods
 (defn export-images-and-create-album
   "Exports given type of images for given set of tags to given path and creates album html page.
   Creates path if not exists"
