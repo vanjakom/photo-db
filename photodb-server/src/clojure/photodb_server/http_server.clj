@@ -109,10 +109,6 @@
           (http-server/api-response-fail {:status :missing-params})))
       (http-server/api-response-fail {:status :missing-params}))))
 
-
-	(todo "implement this")
-	{:body "ok"})
-
 (defn render-photo
 	"To be called to retrieve image with given id and type"
 	[request]

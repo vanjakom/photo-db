@@ -37,6 +37,28 @@
 	[image-id tags]
 	(mongo/update db "images" {:id image-id} {$set {:tags tags}}))
 
+
+(defn image-tag-add
+  "Adds single tag to image"
+  [image-id tag]
+  (mongo/update db "images" {:id image-id} {$addToSet {:tags tag}}))
+
+(defn image-tag-remove
+  "Removes single tag from image"
+  [image-id tag]
+  (mongo/update db "images" {:id image-id} {$pull {:tags tag}}))
+
+(defn image-description-set
+  "Sets decription of image. To be used as text bellow image in renders"
+  [image-id description]
+  (mongo/update db "images" {:id image-id} {$set {:description description}}))
+
+(defn image-description-remove
+  "Removes description of image"
+  [image-id]
+  (mongo/update db "images" {:id image-id} {$unset {:description ""}}))
+
+
 (defn tag-remove [tag-to-remove]
   (doseq [image (filter
                   #(contains? (set (:tags %1)) tag-to-remove)

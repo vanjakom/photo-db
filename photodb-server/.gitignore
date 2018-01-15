@@ -12,3 +12,4 @@ application.log
 application.log.old
 event.log
 event.log.old
+logging
