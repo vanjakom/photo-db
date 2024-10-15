@@ -47,6 +47,31 @@
                                  "</br></br></br></br></br>\n"))))
       (.write album-writer "\t</body>\n</html>"))))
 
+(defn export-images-and-create-album-witout-descriptions
+  "Exports given type of images for given set of tags to given path and creates album html page.
+  Creates path if not exists"
+  [tags type path title]
+
+  (.mkdirs (new java.io.File path))
+  (let [images (manage/images-find tags)]
+    (with-open [album-writer (clojure.java.io/writer (str path "/index.html"))]
+      (.write album-writer "<html>\n\t<head>\n\t</head>\n\t<body align='center' style='background-color:black'>\n")
+      (.write album-writer (str "<h1 style='color:white'>" title "</h1>"))
+      (.write album-writer "</br></br>")
+      (.write album-writer "</br></br>")
+      (doseq [image images]
+        (let [filename (manage/path-name (:path image))
+              image-bytes (photodb-server.core/render-image-api (:id image) type)]
+          (with-open [output-stream (new java.io.FileOutputStream (str path "/" filename))]
+            (.write output-stream image-bytes))
+          (.write album-writer (str
+                                 "\t\t<img src='" filename
+                                 "' style='max-width:1200px;max-height:800px;width:auto;height:auto;'>"
+                                 "</br>"
+                                 "</br>"
+                                 "</br></br></br></br></br>\n"))))
+      (.write album-writer "\t</body>\n</html>"))))
+
 (comment
   (export-images-and-create-album
     ["2018.01 - New Year in Scotland" "#album"]

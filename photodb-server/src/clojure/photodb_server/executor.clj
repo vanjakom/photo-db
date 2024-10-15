@@ -1,8 +1,9 @@
-(ns photodb-server.executor)
-
-(use '[clojure.core.async :only (chan thread go <! >! <!! >!! close!)])
-
-(require '[clojure-repl.logging.event :as event])
+(ns photodb-server.executor
+  (:use
+    [clojure.core.async :only (chan thread go <! >! <!! >!! close!)])
+  (:require
+    [clj-common.logging :as logging]
+    [clojure-repl.logging.event :as event]))
 
 (defonce db
 	(let [connection (monger.core/connect {:host "localhost" :port 27017})]
@@ -76,6 +77,7 @@
 							process-fn (get backend-request :process-fn)
 							request (get backend-request :context)]
 						(try
+              (logging/report backend-request)
 							(process-fn request)
 							(mongodb-change-status backend-request :done)
 							(catch Throwable t

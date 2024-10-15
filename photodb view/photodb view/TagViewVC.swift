@@ -109,6 +109,32 @@ class TagViewVC: UIViewController {
     }
     */
     
+    @IBAction func longPressGestureOnImageView(_ sender: UILongPressGestureRecognizer) {
+        if (sender.state == .ended) {
+            self.photoDbClient.originalImage(self.imageRefs[self.currentImage], callback: { (data: Data?) in
+                if let data = data {
+                    let image = UIImage(data: data)
+                    
+                    UIImageWriteToSavedPhotosAlbum(
+                        image!,
+                        self,
+                        #selector(self.saveOriginalImageHandler(_:didFinishSavingWithError:contextInfo:)),
+                        nil)
+                } else {
+                    self.displayCommandStatus("Unable to download original image")
+                }
+            })
+        }
+    }
+    
+    func saveOriginalImageHandler(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        if let _ = error {
+           self.displayCommandStatus("Unable to save original image")
+        } else {
+            self.displayCommandStatus("Original image saved")
+        }
+    }
+    
     @IBAction func tapGestureOnImageView(_ sender: UITapGestureRecognizer) {
         if (sender.state == .ended) {
             print("tap gesture")

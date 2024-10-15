@@ -68,7 +68,10 @@
 (defn image-create
 	"Should be used during process image, initial image import"
 	[image-metadata]
-	(mongo/insert-and-return db "images" image-metadata))
+  ; having issue with trying to change :_id id1 with id2, wierd
+  ; issue was with mongodb failed on no disk space, reindex ...
+  (mongo/update-by-id db "images" (:_id image-metadata) image-metadata {:upsert true}))
+	;(mongo/insert-and-return db "images" image-metadata))
 
 (defn image-get [image-id]
 	(mongo/find-one-as-map db "images" {:id image-id}))

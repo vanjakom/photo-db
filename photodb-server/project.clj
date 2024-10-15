@@ -7,12 +7,8 @@
   :java-source-paths ["src/java"]
   :resource-paths ["src/resource"]
   :main photodb-server.main
-  :repl-options {
-                  :nrepl-middleware
-                  [lighttable.nrepl.handler/lighttable-ops]}
   :dependencies [
                   [com.mungolab/clj-common "0.2.0-SNAPSHOT"]
                   [com.mungolab/clojure-repl 					"0.1.0-SNAPSHOT"]
-                  [lein-light-nrepl "0.3.2"]
                   [com.novemberain/monger 					"3.0.1"]
                   [com.drewnoakes/metadata-extractor 			"2.8.1"]])

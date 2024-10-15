@@ -22,6 +22,7 @@ protocol PhotoDBClient {
     
     func thumbnailSquareImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) -> Void
     func previewImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) -> Void
+    func originalImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) -> Void
 }
 
 class SimplePhotoDBClient: PhotoDBClient {
@@ -190,6 +191,10 @@ class SimplePhotoDBClient: PhotoDBClient {
     
     func previewImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) {
         image(imageRef, type: "preview", callback: callback)
+    }
+    
+    func originalImage(_ imageRef: ImageRef, callback: @escaping ((Data?) -> Void)) {
+        image(imageRef, type: "original", callback: callback)
     }
     
     func image(_ imageRef: ImageRef, type: String, callback: @escaping ((Data?) -> Void)) {

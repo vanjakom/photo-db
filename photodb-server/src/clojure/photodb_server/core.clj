@@ -189,8 +189,7 @@
 		context))
 
 (defn- write-to-db [context]
-	(let [{	metadata :metadata
-			id :id} context]
+	(let [{metadata :metadata id :id} context]
 		(manage/image-create (assoc metadata :_id id))
 		context))
 

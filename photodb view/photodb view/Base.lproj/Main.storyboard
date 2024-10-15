@@ -37,7 +37,7 @@
                                 <rect key="frame" x="0.0" y="92" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jln-pc-6Hx" id="37J-EW-pb1">
-                                    <frame key="frameInset" width="768" height="43"/>
+                                    <frame key="frameInset" width="768" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="&lt;name&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XLt-Z8-kU0">
@@ -88,6 +88,7 @@
                                     <outletCollection property="gestureRecognizers" destination="T44-vs-WuF" appends="YES" id="tNd-hC-LUw"/>
                                     <outletCollection property="gestureRecognizers" destination="1wF-va-MSD" appends="YES" id="Z61-0N-4nP"/>
                                     <outletCollection property="gestureRecognizers" destination="OVF-ci-YkZ" appends="YES" id="2Gi-MY-ZsL"/>
+                                    <outletCollection property="gestureRecognizers" destination="dbI-HU-Kal" appends="YES" id="KfZ-Wt-Rb4"/>
                                 </connections>
                             </imageView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="none" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1x-LY-QTO">
@@ -131,6 +132,11 @@
                         <action selector="tapGestureOnImageView:" destination="zvN-rQ-Acq" id="QHb-8N-0dy"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="dbI-HU-Kal">
+                    <connections>
+                        <action selector="longPressGestureOnImageView:" destination="zvN-rQ-Acq" id="mjL-Jc-ssk"/>
+                    </connections>
+                </pongPressGestureRecognizer>
                 <swipeGestureRecognizer enabled="NO" direction="right" id="T44-vs-WuF">
                     <connections>
                         <action selector="imageViewSwipeRight:" destination="zvN-rQ-Acq" id="w48-Kh-Ffi"/>
@@ -221,7 +227,7 @@
                                 <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V8f-u1-YSx" id="DfY-Cq-hYW">
-                                    <frame key="frameInset" width="600" height="43"/>
+                                    <frame key="frameInset" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;name&gt;" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wGj-0v-Ajy">

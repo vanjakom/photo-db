@@ -6,14 +6,49 @@ Code is not currently in stage in which it could be useful to someone.
 
 ## hackaton 2, setup
 
+will drop all mongo db tables and create default env
+; (photodb-server.setup/setup)
+
+setup of mongodb / start
+
+cd ~/install/mongodb
+bin/mongod --dbpath ~/install/mongodb-data/
+
 lein repl
 
-; will drop all mongo db tables and create default env
-(photodb-server.setup/setup)
+(photodb-server.main/-main)
 
 
-(photodb-server.http-server/start-server)
+## image import @north2018
 
+curl -H "Content-Type:application/json" -d '{"path":"/Volumes/STORAGE/pictures/2018/2018.07 - @north2018", "tags":["2018.07 - @north2018", "@north2018"]}' 'http://localhost:8988/api/admin/process-path'
+
+db.backend_queue.find({"status":{$ne:"done"}}).count()
+
+http://localhost:8988/render/tag/view?tags=@north2018&type=preview
+
+## image import
+
+procedure
+import images to one of photo stores ( /Users/vanja/Pictures/ ), name directory as album title ( YYYY.MM - TITLE ), leave names as DSLR named them, put both originals and raws into single directory
+ensure photodb server is live, mongodb set up
+call process
+
+curl -H "Content-Type:application/json" -d '{"path":"/Volumes/STORAGE/pictures/2018/2018.01 - New Year in Scotland", "tags":["2018.01 - New Year in Scotland"]}' 'http://localhost:8988/api/admin/process-path'
+
+ensure all images are imported
+
+db.backend_queue.find({"status":{$ne:"done"}}).count()
+
+should return zero
+
+http://localhost:8988/render/tag/view?tags=2018.01%20-%20New%20Year%20in%20Scotland&type=preview
+
+either full screen or most of screen in Safari
+write down ids which will go into album
+
+
+## useful links
 
 curl -H "Content-Type:application/json" -d '{}' 'http://localhost:8988/api/tag/list'
 
@@ -38,6 +73,13 @@ db.images.find({"tags": { $in: ["2014.09 - RoadTrip Greece, Elafonosis Nikon"]}}
 
 db.images.find({"tags": {$in: ["2016.02 - RoadTrip Poland"]}})
 
+## in case of import error
+
+drop mongodb requests ( they will not be resubmitted, mongodb is used only for tracking )
+
+db.backend_queue.remove({"status":{$ne:"done"}})
+
+send process-path request again
 
 ## idea
 
@@ -63,12 +105,12 @@ simple import procedure
 
 download images from dslr to /tmp/import_yyyyMMdd
 
-run process 
+run process
 	curl -D '{
 				"path": "/tmp/import_yyyyMMdd"
 				"tag": "import_yyyyMMdd"}'
 		http://photodb-uri/api/process-path'
-explore images 
+explore images
 	with http://photodb-uri/web/explore&tags=import_yyyyMMdd
 	or with ipad app
 
@@ -83,13 +125,13 @@ run process will do following
 		ensure stores ( in future we should write to temporary store and create sync requests )
 
 explore images will do following
-	identify images that contain given tags 
+	identify images that contain given tags
 	create thumbnail image urls and return them
 
 goal
 create env for photo storage, tagging, browsing, thumbnailing, autodiscovery of new images ...
 
-## entities 
+## entities
 
 ### image
 represents one image taken in various forms
@@ -106,7 +148,7 @@ one day left, idea
 
 ### copy images from DSLR SD card
 ### run process-path, will trigger N process-image
-### process-image will 
+### process-image will
 #### extract id
 #### extract metadata
 #### create thumbnail
@@ -116,12 +158,12 @@ one day left, idea
 
 #### relation between image <> metadata <>  root-store
 
-based on image (raw or jpeg) md5sum is generated, md5sum + exif info + metadata will produce 
-metadata, from image thumbnail, preview is generated 
+based on image (raw or jpeg) md5sum is generated, md5sum + exif info + metadata will produce
+metadata, from image thumbnail, preview is generated
 
 metadata is stored in mongo db
 
-initial root store will be fs 
+initial root store will be fs
 
 
 image:
